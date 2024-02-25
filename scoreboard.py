@@ -1,6 +1,6 @@
 from turtle import Turtle
 ALIGNMENT = "center"
-FONT = ('Courier', 14, 'bold')
+FONT = ('Comic Sans', 16, 'normal')
 FONT2 = ('Courier', 24, 'bold')
 
 
@@ -12,17 +12,29 @@ class Scoreboard(Turtle):
         self.hideturtle()
         self.goto(0, 270)
         self.score = 0
-        self.update_score_board()
+        self.highest_score = 0
+        self.read_highest_score()
+        self.write(f"Score: {self.score}        Highest Score: {self.highest_score}", align=ALIGNMENT, font=FONT)
 
     def game_over(self):
         self.goto(0, 0)
         self.write("GAME OVER", align=ALIGNMENT, font=FONT2)
 
-    def update_score_board(self):
+    def update_scoreboard(self):
         self.clear()
-        self.write(f"Score: {self.score}", align=ALIGNMENT, font=FONT)
-        self.score += 1
+        self.write(f"Score: {self.score}        Highest Score: {self.highest_score}", align=ALIGNMENT, font=FONT)
 
-    def win_game(self):
-        self.goto(0, 0)
-        self.write("YOU WIN", align=ALIGNMENT, font=FONT2)
+    def increase_score(self):
+        self.score += 1
+        self.update_scoreboard()
+
+    def read_highest_score(self):
+        file = open("highest_score.txt", "r")
+        self.highest_score = int(file.read())
+        file.close()
+
+    @staticmethod
+    def update_highest_score(new_score):
+        file = open("highest_score.txt", "w")
+        file.write(str(new_score))
+        file.close()

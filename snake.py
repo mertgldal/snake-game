@@ -64,3 +64,13 @@ class Snake:
     def right(self):
         if self.head.heading() != LEFT:
             self.head.seth(RIGHT)
+
+    def reset_colors(self):
+        self.colors = ["white", "light sky blue", "aquamarine",
+                       "green yellow", "gold", "wheat", "orange",
+                       "crimson", "salmon", "lavender", "dark orange",
+                       "hot pink", "deep pink", "lavender blush",
+                       "medium purple", "medium orchid", "peru",
+                       "medium spring green", "honeydew", "violet",
+                       "spring green", "pale turquoise", "deep pink",
+                       "dodger blue", "dark slate blue", "forest green"]

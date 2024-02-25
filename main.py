@@ -3,7 +3,12 @@ from snake import Snake
 from food import Food
 from scoreboard import Scoreboard
 import time
-# import numpy as np
+
+file = open("highest_score.txt", "r")
+highest_score = int(file.read())
+file.close()
+
+
 screen = Screen()
 
 screen.setup(width=600, height=600)
@@ -13,7 +18,7 @@ screen.tracer(0)
 
 snake = Snake()
 food = Food()
-score = Scoreboard()
+scoreboard = Scoreboard()
 
 screen.listen()
 screen.onkey(key="Up", fun=snake.up)
@@ -24,6 +29,7 @@ screen.onkey(key="Right", fun=snake.right)
 
 sleep_time = 0.1
 is_game_on = True
+
 while is_game_on:
     screen.update()
     time.sleep(sleep_time)
@@ -33,14 +39,15 @@ while is_game_on:
     # Detect collision with food.
     if snake.head.distance(food) < 14:
         food.refresh()
-        score.update_score_board()
+        scoreboard.increase_score()
         snake.extend()
-        sleep_time -= 0.001
+        # This sets the new game speed.
+        sleep_time /= 1.02
 
     # Detect collision with wall.
     if snake.head.xcor() > 290 or snake.head.xcor() < -290 or snake.head.ycor() > 290 or snake.head.ycor() < -290:
         is_game_on = False
-        score.game_over()
+        scoreboard.game_over()
 
     # Detect collision with tail.
     for segment in snake.segments:
@@ -48,17 +55,15 @@ while is_game_on:
             pass
         elif snake.head.distance(segment) < 10:
             is_game_on = False
-            score.game_over()
-    # Shorter version of above code. But there are some error.
-    # arr = np.array(snake.segments)
-    # for segment in arr[1:]:
-        # if snake.head.distance(segment) < 10:
-        #     is_game_on = False
-        #     score.game_over()
+            scoreboard.game_over()
 
-    if score.score == 23:
-        is_game_on = False
-        score.update_score_board()
-        score.win_game()
+    # We have only 23 colors in our game that's why we reset the colors every 23 scores
+    if scoreboard.score % 23 == 0 and scoreboard.score != 0:
+        snake.reset_colors()
+
+# This if checks the highest score at end of the game and update it if the condition is true.
+if highest_score < scoreboard.score:
+    highest_score = scoreboard.score
+    scoreboard.update_highest_score(new_score=highest_score)
 
 screen.exitonclick()
