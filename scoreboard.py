@@ -28,6 +28,7 @@ class Scoreboard(Turtle):
         self.score += 1
         self.update_scoreboard()
 
+    # This function set the highest score according to file.
     def read_highest_score(self):
         file = open("highest_score.txt", "r")
         self.highest_score = int(file.read())
